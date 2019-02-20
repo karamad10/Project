@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Nav from './components/Nav';
 import Home from './components/Home';
+// eslint-disable-next-line no-unused-vars
 import Houses from './components/Houses';
 import Houses2 from './components/HousesRedux';
+// eslint-disable-next-line no-unused-vars
 import SingleHouse from './components/SingleHouse';
 import SingleHouse2 from './components/SingleHouseRedux';
 import ErrorPage from './components/ErrorPage';

@@ -71,7 +71,7 @@ apiRouter
     if (fakeDB[objIndex]) {
       fakeDB.splice(objIndex, 1);
       res.send(fakeDB);
-    } else res.send(`${fakeDB[objIndex]} does not exist`);
+    } else res.status(404).send(` item with id ${id} does not exist`);
   });
 
 apiRouter.use('*', (req, res) => {

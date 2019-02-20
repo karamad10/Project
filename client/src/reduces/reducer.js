@@ -7,7 +7,10 @@ const initState = {
 
 services
   .getMainInfo()
-  .then(Response => initState.houses.splice(0, initState.houses.length, ...Response));
+  .then(
+    Response => initState.houses.splice(0, initState.houses.length, ...Response),
+    (initState.loading = true),
+  );
 
 const reducer = (state = initState, action) => {
   return state;
