@@ -40,14 +40,16 @@ apiRouter
     let newId = fakeDB[fakeDB.length - 1].id + 1;
 
     if (Number.isNaN(newPrice) || newPrice <= 0) {
-      res.status(400).end('This should be a proper number');
+      res.status(400).end(`${newPrice} is not a valid number`);
     } else {
       let newHouse = {
         id: newId,
         price: newPrice,
       };
       fakeDB.push(newHouse);
-      res.send(`added a new house: ${newId} `);
+      res.send(`added a new house:
+      Price: ${newHouse.price}
+      Id: ${newHouse.id} `);
     }
   });
 
@@ -55,7 +57,7 @@ apiRouter
   .route('/Houses/:id')
   .get((req, res) => {
     const id = parseInt(req.params.id);
-    const objIndex = fakeDB.findIndex(obj => obj.id == id);
+    const objIndex = fakeDB.findIndex(obj => obj.id === id);
     if (fakeDB[objIndex]) {
       res.send(fakeDB[objIndex]);
     } else {
@@ -64,12 +66,12 @@ apiRouter
     }
   })
   .delete((req, res) => {
-    const { id } = parseInt(req.params.id);
+    const { id } = req.params;
     const objIndex = fakeDB.findIndex(obj => obj.id == id);
     if (fakeDB[objIndex]) {
       fakeDB.splice(objIndex, 1);
       res.send(fakeDB);
-    } else res.send('item does not exist');
+    } else res.send(`${fakeDB[objIndex]} does not exist`);
   });
 
 apiRouter.use('*', (req, res) => {

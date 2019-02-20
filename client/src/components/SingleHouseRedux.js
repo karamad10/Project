@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 class SingleHouse extends Component {
   render() {
-    console.log(this.props);
     const clickedHouse = this.props.house ? (
       <div className="house">
         <div>{` Id: ${this.props.house.id}  Price: ${this.props.house.price} `}</div>
