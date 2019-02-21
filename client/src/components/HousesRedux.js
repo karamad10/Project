@@ -15,7 +15,7 @@ class Houses extends Component {
       return (
         <div className="App" key={house.id}>
           <Link to={'/Houses/' + house.id}>
-            <div>{` Id: ${house.id}  Price: ${house.price} `}</div>
+            <h5>{` Id: ${house.id}  Price: ${house.price} `}</h5>
           </Link>
         </div>
       );

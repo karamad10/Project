@@ -10,8 +10,6 @@ import SingleHouse from './components/SingleHouse';
 import SingleHouse2 from './components/SingleHouseRedux';
 import ErrorPage from './components/ErrorPage';
 
-import './App.css';
-
 class App extends Component {
   render() {
     return (

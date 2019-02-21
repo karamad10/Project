@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom';
 
 const Nav = () => {
   return (
-    <div className="App">
-      <ul className="nav">
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/Houses">Houses</Link>
-        </li>
-      </ul>
-    </div>
+    <nav>
+      <div className="nav-wrapper teal ">
+        <ul id="nav-mobile" className="left">
+          <li>
+            <Link to="/"> Home</Link>
+          </li>
+          <li>
+            <Link to="/Houses">Houses</Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
   );
 };
 

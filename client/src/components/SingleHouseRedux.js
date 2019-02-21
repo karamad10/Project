@@ -5,10 +5,10 @@ class SingleHouse extends Component {
   render() {
     const clickedHouse = this.props.house ? (
       <div className="house">
-        <div>{` Id: ${this.props.house.id}  Price: ${this.props.house.price} `}</div>
+        <h4>{` Id: ${this.props.house.id}  Price: ${this.props.house.price} `}</h4>
       </div>
     ) : (
-      <div className="center">There is no house with this id </div>
+      <h4 className="center">There is no house with this id </h4>
     );
     return <div>{clickedHouse}</div>;
   }
