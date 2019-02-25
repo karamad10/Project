@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// import {Nav , Home , Houses , Houses2, SingleHouse, SingleHouse2,ErrorPage} from "./components"
 import Nav from './components/Nav';
 import Home from './components/Home';
 // eslint-disable-next-line no-unused-vars
