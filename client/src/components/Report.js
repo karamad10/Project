@@ -4,10 +4,6 @@ class Report extends Component {
     let { invalid } = this.props;
     let { valid } = this.props;
 
-    console.log('  props:', this.props);
-    console.log('valid props:', valid);
-    console.log('invalid props:', invalid);
-
     let invalidHouses = invalid.map((house, i) => (
       <div key={i}>
         Errors: <h4>{JSON.stringify(house.errors, null, 2)}</h4>

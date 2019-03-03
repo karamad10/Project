@@ -14,10 +14,8 @@ class AddHouse extends Component {
     let newItem = this.dataInput.value;
     services.addItem(newItem).then(response => {
       if (response.error) {
-        console.log(response);
         this.setState({ error: response.error });
       } else {
-        console.log(response);
         this.setState({
           valid: response.validHouses,
           invalid: response.invalidHouses,
@@ -25,14 +23,9 @@ class AddHouse extends Component {
         });
       }
     });
-
-    console.log('Form Submitted');
-    // console.log('FE inputted newItem:', newItem);
   };
 
   render() {
-    console.log('state:', this.state);
-
     return (
       <>
         <form onSubmit={this.onFormSubmit}>

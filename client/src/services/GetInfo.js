@@ -14,7 +14,6 @@ export default class GetInfo {
   }
 
   static addItem(newItem) {
-    console.log('item', newItem);
     return fetch('http://localhost:5500/api/houses', {
       method: 'POST',
       body: newItem,
