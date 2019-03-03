@@ -11,6 +11,7 @@ class AddHouse extends Component {
 
   onFormSubmit = e => {
     e.preventDefault();
+
     let newItem = this.dataInput.value;
     services.addItem(newItem).then(response => {
       if (response.error) {
@@ -23,6 +24,7 @@ class AddHouse extends Component {
         });
       }
     });
+    // e.target.reset();
   };
 
   render() {

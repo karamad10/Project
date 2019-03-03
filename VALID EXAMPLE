@@ -12,6 +12,6 @@
 "location_coordinates_lng": 231,
 "description":"word word word",
 "title":"more words",
-"images":"( <image1.com/url> , <image2.co/url>)",
+"images":"( <image1.com/url>a , <image2.co/url>)",
 "sold":1     
-}]
+}] 
