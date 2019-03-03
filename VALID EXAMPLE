@@ -1,0 +1,17 @@
+[{
+"link": "http://new.nl/url",
+"market_date": "2020-02-02",
+"location_country": "nl",
+"location_city":"Amsterdam",
+"location_address":"some street",
+"size_living_area":"120m",
+"size_rooms":3,
+"price_value":2000,
+"price_currency": "$",
+"location_coordinates_lat": 123,
+"location_coordinates_lng": 231,
+"description":"word word word",
+"title":"more words",
+"images":"( <image1.com/url> , <image2.co/url>)",
+"sold":1     
+}]

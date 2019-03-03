@@ -12,6 +12,9 @@ const Nav = () => {
           <li>
             <Link to="/Houses">Houses</Link>
           </li>
+          <li>
+            <Link to="/Contribute">Contribute</Link>
+          </li>
         </ul>
       </div>
     </nav>

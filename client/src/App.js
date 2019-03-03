@@ -10,6 +10,7 @@ import Houses2 from './components/HousesRedux';
 import SingleHouse from './components/SingleHouse';
 import SingleHouse2 from './components/SingleHouseRedux';
 import ErrorPage from './components/ErrorPage';
+import AddHouse from './components/AddHouse';
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/Houses" component={Houses2} />
             <Route exact path="/Houses/:id" component={SingleHouse2} />
+            <Route exact path="/Contribute" component={AddHouse} />
             <Route component={ErrorPage} />
           </Switch>
         </div>
