@@ -102,7 +102,6 @@ const postHouses = (req, res) => {
   };
 
   const sqlDataRaw = validHouses.map(item => sqlDataFields(item.rawData));
-  // sqlDataRaw.splice(1, 1, new Date().toISOString().slice(0, 10));
 
   if (validHouses.length) {
     (async function createData() {

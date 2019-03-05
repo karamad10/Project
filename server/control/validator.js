@@ -1,5 +1,3 @@
-const validate = require('validate.js');
-
 let requiredFields = [
   'link',
   'market_date',
