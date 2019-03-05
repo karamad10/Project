@@ -17,6 +17,7 @@ class AddHouse extends Component {
       if (response.error) {
         this.setState({ error: response.error });
       } else {
+        console.log(response.validHouses);
         this.setState({
           valid: response.validHouses,
           invalid: response.invalidHouses,

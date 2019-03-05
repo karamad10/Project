@@ -19,7 +19,6 @@ let requiredFields = [
 let responseMessage = [];
 
 const validateInput = houseObj => {
-  // const new_date = new Date().toISOString().slice(0, 10);
   function validURL(x) {
     var pattern = new RegExp(
       '^(https?:\\/\\/)?' +
@@ -35,9 +34,8 @@ const validateInput = houseObj => {
 
   let valid = true;
   let errors = [];
-  const {
+  let {
     link,
-    market_date,
     location_country,
     location_city,
     location_address,
@@ -52,6 +50,20 @@ const validateInput = houseObj => {
     sold
   } = houseObj;
   const url = validURL(link);
+  const imgVal = () => {
+    if (images.length > 1) {
+      images = images.split(',');
+      imgValidation.forEach((img, i) => {
+        if (validURL(img)) {
+          console.log(img);
+          errors.push(`image number ${i + 1} is not valid `);
+        }
+      });
+    }
+    return imgValidation;
+  };
+
+  console.log(imgVal);
 
   if (typeof houseObj !== 'object') {
     (valid = false), errors.push('Houses must be an object');
@@ -75,6 +87,8 @@ const validateInput = houseObj => {
     (valid = false), errors.push('description should be at least 10 characters');
   } else if (title.length < 20 && title.length < 5) {
     (valid = false), errors.push('title should be 5-20 characters');
+  } else if (images.length > 1) {
+    (valid = false), imgVal;
   } else if (sold < 0 || sold > 1) {
     (valid = false), errors.push('sold is either 1 or 0');
   } else if (errors.length == 0) {

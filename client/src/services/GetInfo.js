@@ -2,19 +2,19 @@
 
 export default class GetInfo {
   static getMainInfo() {
-    return fetch('http://localhost:5500/api/houses').then(response =>
+    return fetch('http://localhost:4444/api/houses').then(response =>
       this.checkStatusCode(response)
     );
   }
 
   static getSingleItem(id) {
-    return fetch(`http://localhost:5500/api/houses/ ${id}`).then(response =>
+    return fetch(`http://localhost:4444/api/houses/ ${id}`).then(response =>
       this.checkStatusCode(response)
     );
   }
 
   static addItem(newItem) {
-    return fetch('http://localhost:5500/api/houses', {
+    return fetch('http://localhost:4444/api/houses', {
       method: 'POST',
       body: newItem,
       headers: {

@@ -1,6 +1,5 @@
 [{
 "link": "http://new.nl/url",
-"market_date": "2020-02-02",
 "location_country": "nl",
 "location_city":"Amsterdam",
 "location_address":"some street",
@@ -12,6 +11,6 @@
 "location_coordinates_lng": 231,
 "description":"word word word",
 "title":"more words",
-"images":"( <image1.com/url>a , <image2.co/url>)",
+"images":"http://newImage.url/, image2.co/url, image2.co/url",
 "sold":1     
 }] 

@@ -49,76 +49,86 @@ let validHouses = [];
 let invalidHouses = [];
 let errors = [];
 
+const getHouseDetails = (req, res) => {
+  const id = parseInt(req.params.id);
+  const objIndex = fakeDB.findIndex(obj => obj.id === id);
+  if (fakeDB[objIndex]) {
+    res.send(fakeDB[objIndex]);
+  } else {
+    // res.send('item does not exist');
+    res.redirect(404, '/api/houses/');
+  }
+};
+
+const deleteHouse = (req, res) => {
+  const { id } = req.params;
+  const objIndex = fakeDB.findIndex(obj => obj.id == id);
+  if (fakeDB[objIndex]) {
+    fakeDB.splice(objIndex, 1);
+    res.send(fakeDB);
+  } else res.status(404).send(` item with id ${id} does not exist`);
+};
+
+const getHouses = (req, res) => {
+  res.send(fakeDB);
+};
+
+const postHouses = (req, res) => {
+  let data = req.body;
+  if (!Array.isArray(data)) {
+    res.status(400).json({ error: 'Data must be an array' });
+  }
+
+  const validatedData = data.map(houseObj => {
+    return validateInput(houseObj);
+  });
+
+  validatedData.forEach(house => {
+    if (house.valid) {
+      house.rawData.market_date = new_date;
+      validHouses.push(house);
+    } else {
+      invalidHouses.push(house);
+    }
+  });
+  invalidHouses.forEach(item => {
+    return errors.push(item.errors);
+  });
+  const report = {
+    validHouses,
+    invalidHouses,
+    responseMessage,
+    errors
+  };
+
+  const sqlDataRaw = validHouses.map(item => sqlDataFields(item.rawData));
+  // sqlDataRaw.splice(1, 1, new Date().toISOString().slice(0, 10));
+
+  if (validHouses.length) {
+    (async function createData() {
+      try {
+        await execQuery(addHouses, [sqlDataRaw]);
+        return res.json(report);
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+    })();
+  } else res.send(report);
+};
+
 apiRouter.route('/').get((req, res) => {
   res.send('Main Api Page Only');
 });
 
 apiRouter
   .route('/Houses')
-  .get((req, res) => {
-    res.send(fakeDB);
-  })
-  .post((req, res) => {
-    let data = req.body;
-    if (!Array.isArray(data)) {
-      res.status(400).json({ error: 'Data must be an array' });
-    }
-    const validatedData = data.map(houseObj => {
-      return validateInput(houseObj);
-    });
-
-    validatedData.forEach(house => {
-      if (house.valid) {
-        house.market_date = new_date;
-        validHouses.push(house);
-      } else {
-        invalidHouses.push(house);
-      }
-    });
-    invalidHouses.forEach(item => {
-      return errors.push(item.errors);
-    });
-    const report = {
-      validHouses,
-      invalidHouses,
-      responseMessage,
-      errors
-    };
-
-    const sqlDataRaw = validHouses.map(item => sqlDataFields(item.rawData));
-
-    if (validHouses.length) {
-      (async function createData() {
-        try {
-          await execQuery(addHouses, [sqlDataRaw]);
-          return res.json(report);
-        } catch (error) {
-          return res.status(500).json({ error: error.message });
-        }
-      })();
-    } else res.send(report);
-  });
+  .get(getHouses)
+  .post(postHouses);
 
 apiRouter
   .route('/Houses/:id')
-  .get((req, res) => {
-    const id = parseInt(req.params.id);
-    const objIndex = fakeDB.findIndex(obj => obj.id === id);
-    if (fakeDB[objIndex]) {
-      res.send(fakeDB[objIndex]);
-    } else {
-      // res.send('item does not exist');
-      res.redirect(404, '/api/houses/');
-    }
-  })
-  .delete((req, res) => {
-    const { id } = req.params;
-    const objIndex = fakeDB.findIndex(obj => obj.id == id);
-    if (fakeDB[objIndex]) {
-      fakeDB.splice(objIndex, 1);
-      res.send(fakeDB);
-    } else res.status(404).send(` item with id ${id} does not exist`);
-  });
+  .get(getHouseDetails)
+  .delete(deleteHouse);
 
 apiRouter.use('*', (req, res) => {
   res.status(404).end('Page not found');
