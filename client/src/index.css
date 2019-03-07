@@ -42,3 +42,13 @@ li {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #159799;
 }
+
+#select-option {
+  display: inline-block;
+  width: 80%;
+}
+
+#houses-links {
+  width: 33.33%;
+  padding: 10px;
+}

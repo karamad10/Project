@@ -3,31 +3,24 @@ const { db_connection, execQuery } = require('../db');
 const { validateInput, sqlDataFields, responseMessage } = require('../control/validator');
 const apiRouter = express.Router();
 
-const fakeDB = [
-  {
-    id: 1,
-    price: 10000
-  },
-  {
-    id: 2,
-    price: 20000
-  },
-  {
-    id: 3,
-    price: 30000
-  },
-  {
-    id: 4,
-    price: 40000
-  },
-  {
-    id: 5,
-    price: 50000
-  }
-];
-
 const new_date = new Date();
-new_date.setHours(0, 0, 0, 0);
+function isNanAndPos(num) {
+  if (Number.isNaN(num) || num === 20000) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// function orderBy(x) {
+//   let index = x.lastIndexOf('_');
+// }
+let DEFAULT_VALUES = {
+  price_min: 0,
+  price_max: 999999999,
+  order: 'location_country_asc',
+  page: 1
+};
 const addHouses = `
 REPLACE INTO Houses (
   link,
@@ -51,13 +44,21 @@ let errors = [];
 
 const getHouseDetails = (req, res) => {
   const id = parseInt(req.params.id);
-  const objIndex = fakeDB.findIndex(obj => obj.id === id);
-  if (fakeDB[objIndex]) {
-    res.send(fakeDB[objIndex]);
-  } else {
-    // res.send('item does not exist');
-    res.redirect(404, '/api/houses/');
-  }
+  (async function createData() {
+    try {
+      const houses = await execQuery(`select * from houses`);
+      const objIndex = houses.findIndex(house => house.id === id);
+      if (houses[objIndex]) {
+        res.send(houses[objIndex]);
+      } else {
+        // res.send('item does not exist');
+        res.redirect(404, '/api/houses/');
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  })();
 };
 
 const deleteHouse = (req, res) => {
@@ -70,16 +71,53 @@ const deleteHouse = (req, res) => {
 };
 
 const getHouses = (req, res) => {
-  res.send(fakeDB);
+  (async function createData() {
+    console.log('Req Q:', req.query);
+    DEFAULT_VALUES = req.query;
+    let { price_min, price_max, page, order } = DEFAULT_VALUES;
+    price_max = parseInt(price_max, 10);
+    page = parseInt(page, 10);
+
+    if (!isNanAndPos(price_max) || !isNanAndPos(page)) {
+      return res.status(400).json({
+        error: 'invalid value'
+      });
+    }
+
+    let order_field, order_direction;
+    if (!!order) {
+      let index = order.lastIndexOf('_');
+      if (index > 0) {
+        order_field = order.slice(0, index);
+        order_direction = order.slice(index + 1);
+        if (['asc', 'desc'].indexOf(order_direction) === -1)
+          return res.status(400).json({
+            error: 'invalid order value'
+          });
+      } else {
+        return res.status(400).json({
+          error: 'invalid order value'
+        });
+      }
+    }
+    try {
+      const houses = await execQuery(`select * from houses`);
+      res.json(houses);
+      // return res.json(report);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  })();
 };
 
 const postHouses = (req, res) => {
-  let data = req.body;
-  if (!Array.isArray(data)) {
+  let inputData = req.body;
+  if (!Array.isArray(inputData)) {
     res.status(400).json({ error: 'Data must be an array' });
   }
 
-  const validatedData = data.map(houseObj => {
+  const validatedData = inputData.map(houseObj => {
     return validateInput(houseObj);
   });
 

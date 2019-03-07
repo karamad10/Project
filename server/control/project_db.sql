@@ -11,8 +11,8 @@ CREATE TABLE Houses (
   `size_rooms` INT UNSIGNED NOT NULL,
   `price_value` FLOAT UNSIGNED NOT NULL,
   `price_currency` CHAR(3) NOT NULL,
-  `location_coordinates_lat` FLOAT UNSIGNED,
-  `location_coordinates_lng` FLOAT UNSIGNED ,
+  `location_coordinates_lat` DECIMAL UNSIGNED,
+  `location_coordinates_lng` DECIMAL UNSIGNED ,
   `description` TEXT,
   `title` TEXT, 
   `images`  TEXT,
@@ -41,10 +41,10 @@ CREATE TABLE Houses (
     sold
   ) 
   VALUES (
-    'URL here',
+    'URL',
     NOW(),
-    'Country-Location',
-    'City-Location',
+    'Country',
+    'City',
     'Adress',
     '20m',
     '3',

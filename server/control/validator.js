@@ -51,7 +51,6 @@ const validateInput = houseObj => {
   let imgValidation = (images = images.split(','));
   images.forEach((img, i) => {
     if (validURL(img) === true) {
-      console.log('t');
       valid = true;
     } else {
       (valid = false), errors.push(`image number ${i + 1} is not valid `);

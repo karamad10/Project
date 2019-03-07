@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 class Houses extends Component {
   state = {
-    loading: false,
+    loading: false
   };
 
   render() {
@@ -15,7 +15,9 @@ class Houses extends Component {
       return (
         <div className="App" key={house.id}>
           <Link to={'/Houses/' + house.id}>
-            <h5>{` Id: ${house.id}  Price: ${house.price} `}</h5>
+            <h6>{` Location: ${house.location_country}`}</h6>
+            <h6>{`Price: ${house.price_value} ${house.price_currency} `}</h6>
+            <br />
           </Link>
         </div>
       );
@@ -31,7 +33,7 @@ class Houses extends Component {
 
 const mapStateToProps = state => {
   return {
-    houses: state.houses,
+    houses: state.houses
   };
 };
 

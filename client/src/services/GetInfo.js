@@ -7,6 +7,12 @@ export default class GetInfo {
     );
   }
 
+  static getSearchInfo(searchQuery) {
+    return fetch(`http://localhost:4444/api/houses? ${searchQuery}`).then(response =>
+      this.checkStatusCode(response)
+    );
+  }
+
   static getSingleItem(id) {
     return fetch(`http://localhost:4444/api/houses/ ${id}`).then(response =>
       this.checkStatusCode(response)

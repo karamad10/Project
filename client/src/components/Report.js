@@ -7,10 +7,10 @@ class Report extends Component {
 
   render() {
     let { invalid, responseMessage } = this.state;
-    
+
     let invalidHouses = invalid.map((house, i) => (
       <div key={i}>
-        Errors: <h4>{JSON.stringify(house.errors, null, 2)}</h4>
+        Errors:<h4>{JSON.stringify(house.errors, null, 2)}</h4>
         data:<h5>{JSON.stringify(house.rawData, null, 2)}</h5>
       </div>
     ));
