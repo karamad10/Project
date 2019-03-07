@@ -73,31 +73,32 @@ const deleteHouse = (req, res) => {
 const getHouses = (req, res) => {
   (async function createData() {
     console.log('Req Q:', req.query);
-    DEFAULT_VALUES = req.query;
-    let { price_min, price_max, page, order } = DEFAULT_VALUES;
-    price_max = parseInt(price_max, 10);
-    page = parseInt(page, 10);
+    if (!req.query === {}) {
+      DEFAULT_VALUES = req.query;
+      let { price_min, price_max, page, order } = DEFAULT_VALUES;
+      price_max = parseInt(price_max, 10);
+      page = parseInt(page, 10);
+      if (!isNanAndPos(price_max) || !isNanAndPos(page)) {
+        return res.status(400).json({
+          error: 'invalid value'
+        });
+      }
 
-    if (!isNanAndPos(price_max) || !isNanAndPos(page)) {
-      return res.status(400).json({
-        error: 'invalid value'
-      });
-    }
-
-    let order_field, order_direction;
-    if (!!order) {
-      let index = order.lastIndexOf('_');
-      if (index > 0) {
-        order_field = order.slice(0, index);
-        order_direction = order.slice(index + 1);
-        if (['asc', 'desc'].indexOf(order_direction) === -1)
+      let order_field, order_direction;
+      if (!!order) {
+        let index = order.lastIndexOf('_');
+        if (index > 0) {
+          order_field = order.slice(0, index);
+          order_direction = order.slice(index + 1);
+          if (['asc', 'desc'].indexOf(order_direction) === -1)
+            return res.status(400).json({
+              error: 'invalid order value'
+            });
+        } else {
           return res.status(400).json({
             error: 'invalid order value'
           });
-      } else {
-        return res.status(400).json({
-          error: 'invalid order value'
-        });
+        }
       }
     }
     try {
