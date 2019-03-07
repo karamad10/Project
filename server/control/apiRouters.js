@@ -5,7 +5,7 @@ const apiRouter = express.Router();
 
 const new_date = new Date();
 function isNanAndPos(num) {
-  if (Number.isNaN(num) || num === 20000) {
+  if (Number.isNaN(num) || num < 0) {
     return false;
   } else {
     return true;
@@ -70,35 +70,48 @@ const deleteHouse = (req, res) => {
   } else res.status(404).send(` item with id ${id} does not exist`);
 };
 
+// const getHouses = (req, res) => {
+//   (async function createData() {
+//     try {
+//       const houses = await execQuery(`select * from houses`);
+//       res.json(houses);
+//       // return res.json(report);
+//     } catch (error) {
+//       console.log(error);
+//       return res.status(500).json({ error: error.message });
+//     }
+//   })();
+// };
+
 const getHouses = (req, res) => {
   (async function createData() {
     console.log('Req Q:', req.query);
-    if (!req.query === {}) {
-      DEFAULT_VALUES = req.query;
-      let { price_min, price_max, page, order } = DEFAULT_VALUES;
-      price_max = parseInt(price_max, 10);
-      page = parseInt(page, 10);
-      if (!isNanAndPos(price_max) || !isNanAndPos(page)) {
-        return res.status(400).json({
-          error: 'invalid value'
-        });
-      }
 
+    DEFAULT_VALUES = req.query;
+    let { price_min, price_max, page, order } = DEFAULT_VALUES;
+
+    price_max = parseInt(price_max, 10);
+    page = parseInt(page, 10);
+    if (isNanAndPos(price_max) === false && isNanAndPos(page) === false) {
+      return res.status(400).json({
+        error: 'invalid value'
+      });
+    }
+    if (!req.query === {}) {
       let order_field, order_direction;
-      if (!!order) {
-        let index = order.lastIndexOf('_');
-        if (index > 0) {
-          order_field = order.slice(0, index);
-          order_direction = order.slice(index + 1);
-          if (['asc', 'desc'].indexOf(order_direction) === -1)
-            return res.status(400).json({
-              error: 'invalid order value'
-            });
-        } else {
+      let index = order.lastIndexOf('_');
+      console.log(index);
+      if (index > 0) {
+        order_field = order.slice(0, index);
+        order_direction = order.slice(index + 1);
+        if (['asc', 'desc'].indexOf(order_direction) === -1)
           return res.status(400).json({
             error: 'invalid order value'
           });
-        }
+      } else {
+        return res.status(400).json({
+          error: 'invalid order value'
+        });
       }
     }
     try {
@@ -161,6 +174,7 @@ apiRouter.route('/').get((req, res) => {
 apiRouter
   .route('/Houses')
   .get(getHouses)
+  // .get(getSearchedForHouses)
   .post(postHouses);
 
 apiRouter

@@ -13,6 +13,10 @@ class SearchForm extends Component {
     }
   };
 
+  componentDidMount() {
+    this.fetchSearchResults();
+  }
+
   fetchSearchResults = () => {
     const { SearchCriteria } = this.state;
     const queryString = Object.keys(SearchCriteria)
@@ -56,7 +60,7 @@ class SearchForm extends Component {
     // const { price_min, price_max, city, order, page } = this.state.SearchCriteria;
 
     const MIN_PRISES = [0, 10000, 20000, 30000, 40000, 50000];
-    const MAX_PRISES = [10000, 20000, 30000, 40000, 50000, 60000];
+    const MAX_PRISES = [0, 10000, 20000, 30000, 40000, 50000, 60000];
     const CITIES = ['Amsterdam', 'Lattakia', 'Madrid', 'Damascus', 'Paris'];
     const ORDER = ['City ASC', 'City DESC', 'Price ASC', 'Price DESC'];
 
