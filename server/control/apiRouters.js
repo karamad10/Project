@@ -1,6 +1,6 @@
 const express = require('express');
-const { db_connection, execQuery } = require('../db');
-const { validateInput, sqlDataFields, responseMessage } = require('../control/validator');
+const { execQuery } = require('../db');
+const { validateInput, sqlDataFields } = require('../control/validator');
 const apiRouter = express.Router();
 
 const new_date = new Date();
@@ -42,23 +42,21 @@ let validHouses = [];
 let invalidHouses = [];
 let errors = [];
 
-const getHouseDetails = (req, res) => {
+const getHouseDetails = async (req, res) => {
   const id = parseInt(req.params.id);
-  (async function createData() {
-    try {
-      const houses = await execQuery(`select * from houses`);
-      const objIndex = houses.findIndex(house => house.id === id);
-      if (houses[objIndex]) {
-        res.send(houses[objIndex]);
-      } else {
-        // res.send('item does not exist');
-        res.redirect(404, '/api/houses/');
-      }
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: error.message });
+  try {
+    const houses = await execQuery(`select * from houses`);
+    const objIndex = houses.findIndex(house => house.id === id);
+    if (houses[objIndex]) {
+      res.send(houses[objIndex]);
+    } else {
+      // res.send('item does not exist');
+      res.redirect(404, '/api/houses/');
     }
-  })();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 const deleteHouse = (req, res) => {
@@ -70,59 +68,45 @@ const deleteHouse = (req, res) => {
   } else res.status(404).send(` item with id ${id} does not exist`);
 };
 
-// const getHouses = (req, res) => {
-//   (async function createData() {
-//     try {
-//       const houses = await execQuery(`select * from houses`);
-//       res.json(houses);
-//       // return res.json(report);
-//     } catch (error) {
-//       console.log(error);
-//       return res.status(500).json({ error: error.message });
-//     }
-//   })();
-// };
+const getHouses = async (req, res) => {
+  console.log('Req Q:', req.query);
 
-const getHouses = (req, res) => {
-  (async function createData() {
-    console.log('Req Q:', req.query);
-
-    DEFAULT_VALUES = req.query;
-    let { price_min, price_max, page, order } = DEFAULT_VALUES;
-
-    price_max = parseInt(price_max, 10);
-    page = parseInt(page, 10);
-    if (isNanAndPos(price_max) === false && isNanAndPos(page) === false) {
+  DEFAULT_VALUES = req.query;
+  let { price_min, price_max, page, order } = DEFAULT_VALUES;
+  price_max = parseInt(price_max, 10);
+  page = parseInt(page, 10);
+  // if (isNanAndPos(price_max) === false && isNanAndPos(page) === false) {
+  //   return res.status(400).json({
+  //     error: 'invalid value'
+  //   });
+  // }
+  if (price_min >= price_max) {
+    return res.status(400).json({
+      error: 'price_max should be bigger than price_min'
+    });
+  }
+  let order_field, order_direction;
+  let index = order.lastIndexOf('_');
+  if (index > 0) {
+    order_field = order.slice(0, index);
+    order_direction = order.slice(index + 1);
+    if (['asc', 'desc'].indexOf(order_direction) === -1)
       return res.status(400).json({
-        error: 'invalid value'
+        error: 'invalid order value'
       });
-    }
-    if (!req.query === {}) {
-      let order_field, order_direction;
-      let index = order.lastIndexOf('_');
-      console.log(index);
-      if (index > 0) {
-        order_field = order.slice(0, index);
-        order_direction = order.slice(index + 1);
-        if (['asc', 'desc'].indexOf(order_direction) === -1)
-          return res.status(400).json({
-            error: 'invalid order value'
-          });
-      } else {
-        return res.status(400).json({
-          error: 'invalid order value'
-        });
-      }
-    }
-    try {
-      const houses = await execQuery(`select * from houses`);
-      res.json(houses);
-      // return res.json(report);
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error: error.message });
-    }
-  })();
+  } else {
+    return res.status(400).json({
+      error: 'invalid order value'
+    });
+  }
+  try {
+    const houses = await execQuery(`select * from houses`);
+    res.json(houses);
+    // return res.json(report);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 const postHouses = (req, res) => {
@@ -137,7 +121,6 @@ const postHouses = (req, res) => {
 
   validatedData.forEach(house => {
     if (house.valid) {
-      house.rawData.market_date = new_date;
       validHouses.push(house);
     } else {
       invalidHouses.push(house);
@@ -149,7 +132,6 @@ const postHouses = (req, res) => {
   const report = {
     validHouses,
     invalidHouses,
-    responseMessage,
     errors
   };
 
@@ -167,6 +149,17 @@ const postHouses = (req, res) => {
   } else res.send(report);
 };
 
+const getCities = async (req, res) => {
+  try {
+    const cities = await execQuery(
+      `SELECT DISTINCT location_city FROM houses ORDER BY location_city`
+    );
+    res.json(cities);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 apiRouter.route('/').get((req, res) => {
   res.send('Main Api Page Only');
 });
@@ -174,8 +167,9 @@ apiRouter.route('/').get((req, res) => {
 apiRouter
   .route('/Houses')
   .get(getHouses)
-  // .get(getSearchedForHouses)
   .post(postHouses);
+
+apiRouter.route('/Houses/cities/all').get(getCities);
 
 apiRouter
   .route('/Houses/:id')

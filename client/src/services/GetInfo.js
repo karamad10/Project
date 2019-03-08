@@ -1,26 +1,27 @@
 // import { error } from 'util';
+import { BASE_URL } from './constants';
 
 export default class GetInfo {
   static getMainInfo() {
-    return fetch('http://localhost:4444/api/houses').then(response =>
-      this.checkStatusCode(response)
-    );
+    return fetch(`${BASE_URL}/houses`).then(response => this.checkStatusCode(response));
+  }
+
+  static SearchCities() {
+    return fetch(`${BASE_URL}/houses/cities/all`).then(response => this.checkStatusCode(response));
   }
 
   static getSearchInfo(searchQuery) {
-    return fetch(`http://localhost:4444/api/houses? ${searchQuery}`).then(response =>
+    return fetch(`${BASE_URL}/houses?${searchQuery}`).then(response =>
       this.checkStatusCode(response)
     );
   }
 
   static getSingleItem(id) {
-    return fetch(`http://localhost:4444/api/houses/ ${id}`).then(response =>
-      this.checkStatusCode(response)
-    );
+    return fetch(`${BASE_URL}/houses/${id}`).then(response => this.checkStatusCode(response));
   }
 
   static addItem(newItem) {
-    return fetch('http://localhost:4444/api/houses', {
+    return fetch(`${BASE_URL}/houses`, {
       method: 'POST',
       body: newItem,
       headers: {

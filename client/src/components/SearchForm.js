@@ -4,6 +4,7 @@ import services from '../services/GetInfo';
 class SearchForm extends Component {
   state = {
     houses: [],
+    cities: [],
     SearchCriteria: {
       price_min: 0,
       price_max: 1000000000,
@@ -15,6 +16,12 @@ class SearchForm extends Component {
 
   componentDidMount() {
     this.fetchSearchResults();
+    services.SearchCities(this.state.houses).then(cities => {
+      this.setState({
+        ...this.state,
+        cities
+      });
+    });
   }
 
   fetchSearchResults = () => {
@@ -29,11 +36,8 @@ class SearchForm extends Component {
       }, [])
       .join('&');
     console.log('Query String:', queryString);
-    services.getSearchInfo(queryString).then(res => {
-      console.log(res);
-      this.setState({
-        houses: res
-      });
+    services.getSearchInfo(queryString).then(houses => {
+      this.props.onSearchResults(houses);
     });
   };
 
@@ -56,13 +60,18 @@ class SearchForm extends Component {
 
   render() {
     // console.log(this.props.houses);
-    console.log('state', this.state);
+    // console.log('state', this.state);
     // const { price_min, price_max, city, order, page } = this.state.SearchCriteria;
 
     const MIN_PRISES = [0, 10000, 20000, 30000, 40000, 50000];
     const MAX_PRISES = [0, 10000, 20000, 30000, 40000, 50000, 60000];
-    const CITIES = ['Amsterdam', 'Lattakia', 'Madrid', 'Damascus', 'Paris'];
     const ORDER = ['City ASC', 'City DESC', 'Price ASC', 'Price DESC'];
+    let CITIES = [];
+    this.state.cities.forEach(cityObj => {
+      Object.values(cityObj).map(city => {
+        return CITIES.push(city);
+      });
+    });
 
     const searchFields = (
       <div className="row">

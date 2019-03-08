@@ -1,16 +1,17 @@
 [{
-"link": "http://new.nl/url",
+"link": "http://w123df.nl/url222",
+"market_date": "2012-02-02",
 "location_country": "nl",
 "location_city":"Amsterdam",
 "location_address":"some street",
-"size_living_area":"120m",
+"size_living_area": 500,
 "size_rooms":3,
 "price_value":2000,
 "price_currency": "$",
-"location_coordinates_lat": 123,
-"location_coordinates_lng": 231,
+"location_coordinates_lat": 122.3,
+"location_coordinates_lng": 232.1,
 "description":"word word word",
 "title":"more words",
-"images":"http://newImage.url/",
+"images":"http://imgimg22.url/",
 "sold":1     
 }] 

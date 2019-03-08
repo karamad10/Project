@@ -14,9 +14,18 @@ let requiredFields = [
   'sold'
 ];
 
-let responseMessage = [];
-
 const validateInput = houseObj => {
+  function validateDate(date) {
+    const selectedDate = new Date(date);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    if (selectedDate > now) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   function validURL(x) {
     var pattern = new RegExp(
       '^(https?:\\/\\/)?' +
@@ -30,10 +39,10 @@ const validateInput = houseObj => {
     return pattern.test(x);
   }
 
-  let valid = true;
   let errors = [];
   let {
     link,
+    market_date,
     location_country,
     location_city,
     location_address,
@@ -47,55 +56,71 @@ const validateInput = houseObj => {
     images,
     sold
   } = houseObj;
-  const url = validURL(link);
-  let imgValidation = (images = images.split(','));
-  images.forEach((img, i) => {
-    if (validURL(img) === true) {
-      valid = true;
-    } else {
-      (valid = false), errors.push(`image number ${i + 1} is not valid `);
-    }
-  });
+
+  const validUrl = validURL(link);
+  const validDate = validateDate(market_date);
 
   if (typeof houseObj !== 'object') {
-    (valid = false), errors.push('Houses must be an object');
+    errors.push('Houses must be an object');
   } else if (Object.entries(houseObj).length === 0 && houseObj.constructor === Object) {
-    (valid = false), errors.push('invalid empty object');
-  } else if (url === false) {
-    (valid = false), errors.push(` Invalid URL`);
-  } else if (!isNaN(location_country || location_city)) {
-    (valid = false), errors.push('invalid Location');
-  } else if (location_address.length < 10 || location_address.length > 25) {
-    (valid = false), errors.push('address should be 10-40 characters');
-  } else if (!size_living_area.match(/(\d+).?(\d*)\s*(m)/)) {
-    (valid = false), errors.push('size should be per m');
-  } else if (isNaN(size_rooms) || size_rooms > 20 || size_rooms <= 0) {
-    (valid = false), errors.push('invalid rooms size');
-  } else if (price_value <= 0) {
-    (valid = false), errors.push('invalid price');
-  } else if (isNaN(location_coordinates_lat, location_coordinates_lng)) {
-    (valid = false), errors.push('lat/lng should be a number');
-  } else if (description.length < 10) {
-    (valid = false), errors.push('description should be at least 10 characters');
-  } else if (title.length < 20 && title.length < 5) {
-    (valid = false), errors.push('title should be 5-20 characters');
-  } else if (imgValidation == false) {
-    (valid = false), imgValidation;
-  } else if (sold < 0 || sold > 1) {
-    (valid = false), errors.push('sold is either 1 or 0');
-  } else if (errors.length == 0) {
-    (valid = true), responseMessage.splice(0, responseMessage.length, 'Success 👍');
+    errors.push('invalid empty object');
   } else {
-    requiredFields.forEach(field => {
-      if (typeof houseObj[field] === 'undefined' || '') {
-        (valid = false), errors.push(` ${field} is required !`);
+    let imgValidation = images.split(',');
+    imgValidation.forEach((img, i) => {
+      if (validURL(img) === true) {
+        valid = true;
+      } else {
+        (valid = false), errors.push(`image number ${i + 1} is not valid `);
       }
     });
+
+    if (!validUrl) {
+      errors.push(` Invalid URL `);
+    }
+    if (!validDate) {
+      errors.push(`Date must be in the past`);
+    }
+    if (!isNaN(location_country) || !isNaN(location_city)) {
+      errors.push('invalid Location');
+    }
+    if (location_address.length < 10 || location_address.length > 25) {
+      errors.push('address should be 10-25 characters');
+    }
+    if (isNaN(size_living_area) || size_living_area > 1000 || size_living_area < 0) {
+      errors.push('size should be be between 0 and 1000 ');
+    }
+    if (isNaN(size_rooms) || size_rooms > 20 || size_rooms <= 0) {
+      errors.push('rooms should be be between 0 and 20');
+    }
+    if (price_value <= 0) {
+      errors.push('invalid price');
+    }
+    if (isNaN(location_coordinates_lat) || isNaN(location_coordinates_lng)) {
+      errors.push('lat/lng should be a number');
+    }
+    if (description.length < 10) {
+      errors.push('description should be at least 10 characters');
+    }
+    if (title.length < 20 && title.length < 5) {
+      errors.push('title should be 5-20 characters');
+    }
+    if (imgValidation === false) {
+      imgValidation;
+    }
+    if (sold < 0 || sold > 1) {
+      errors.push('sold is either 1 or 0');
+    }
+    {
+      requiredFields.forEach(field => {
+        if (typeof houseObj[field] === 'undefined' || '') {
+          errors.push(`${field} is required !`);
+        }
+      });
+    }
   }
   return {
-    valid,
+    valid: errors.length === 0,
     errors,
-    responseMessage,
     rawData: houseObj
   };
 };
@@ -104,4 +129,4 @@ const sqlDataFields = houseObj => {
   return requiredFields.map(field => houseObj[field]);
 };
 
-module.exports = { validateInput, sqlDataFields, responseMessage };
+module.exports = { validateInput, sqlDataFields };
