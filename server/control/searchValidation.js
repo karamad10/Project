@@ -1,5 +1,5 @@
 const { HOUSES_PER_PAGE } = require('./constants');
-const db = require('../db');
+// const db = require('../db');
 let valid = [];
 let errors = [];
 
@@ -40,8 +40,10 @@ const validateSearch = SEARCH_VALUES => {
     errors.push('rooms should be between 1 and 10');
   }
 
-  let order_field, order_direction;
-  let index = order.lastIndexOf('_');
+  let order_field, order_direction, index;
+  if (order) {
+    index = order.lastIndexOf('_');
+  }
   if (index > 0) {
     order_field = order.slice(0, index);
     order_direction = order.slice(index + 1);
