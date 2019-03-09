@@ -58,15 +58,14 @@ const getHouses = async (req, res) => {
 
   if (!valid) {
     res.status(400).json({ error: errors });
-    console.log('ERRORS: ', errors);
-  }
-
-  try {
-    const total = await execQuery(queryTotal, params);
-    const houses = await execQuery(queryItems, params);
-    res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+  } else {
+    try {
+      const total = await execQuery(queryTotal, params);
+      const houses = await execQuery(queryItems, params);
+      res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
+    } catch (error) {
+      return res.status(500).json({ error: error });
+    }
   }
 };
 

@@ -7,8 +7,8 @@ class SearchForm extends Component {
     houses: [],
     countries: [],
     cities: [],
+    totalHouses: [],
     pageSize: null,
-    totalHouses: null,
     SearchCriteria: {
       price_min: 0,
       price_max: 1000000000,
@@ -21,17 +21,27 @@ class SearchForm extends Component {
   };
 
   componentDidMount() {
-    this.fetchSearchResults();
+    const params = this.props.props.location.search
+      .replace(/^\?/, '')
+      .split('&')
+      .filter(el => el.length)
+      .map(pair => pair.split('='))
+      .reduce((params, [name, value]) => {
+        params[name] = value;
+        return params;
+      }, {});
+
     services.SearchCitiesAndCountries(this.state.houses).then(data => {
       this.setState({
         ...this.state,
+        ...params,
         cities: data.cities,
         countries: data.countries
       });
-    });
+    }, this.fetchSearchResults());
   }
 
-  fetchSearchResults = () => {
+  fetchSearchResults = (updateURL = false) => {
     const { SearchCriteria } = this.state;
     const queryString = Object.keys(SearchCriteria)
       .reduce((query, field) => {
@@ -42,14 +52,23 @@ class SearchForm extends Component {
         return query;
       }, [])
       .join('&');
-    console.log('Query String:', queryString);
+
+    if (updateURL) {
+      this.props.props.history.push(this.props.props.location.pathname + '?' + queryString);
+    }
+
+    // console.log('Query String:', queryString);
     services.getSearchInfo(queryString).then(data => {
       this.setState({
         pageSize: data.pageSize,
         totalHouses: data.total
       });
-      this.props.onSearchResults(data.houses);
+      this.props.onSearchResults(data.houses, data.error);
     });
+  };
+
+  onPageChange = page => {
+    console.log('set page', page);
   };
 
   handleChange = e => {
@@ -65,11 +84,17 @@ class SearchForm extends Component {
 
   onFormSubmit = e => {
     e.preventDefault();
-    this.fetchSearchResults();
+    this.fetchSearchResults(true);
     console.log('Form Submitted');
   };
 
   render() {
+    const { houses, totalHouses, pageSize } = this.state;
+    const { page } = this.state.SearchCriteria;
+
+    console.log(page, pageSize, totalHouses);
+    const pages = Math.ceil(totalHouses / pageSize);
+
     let CITIES = [];
     let COUNTRIES = [];
     this.state.cities.forEach(cityObj => {
@@ -134,17 +159,6 @@ class SearchForm extends Component {
           </select>
         </div>
         <div className="input-field col s3">
-          <select id={'select-option'} name="size_rooms" onChange={this.handleChange}>
-            <option value="">Number of rooms</option>
-            {SIZE_ROOMS.map((room, i) => (
-              <option key={i} value={room}>
-                {room}
-              </option>
-            ))}
-            ;
-          </select>
-        </div>
-        <div className="input-field col s3">
           <select id={'select-option'} name="order" onChange={this.handleChange}>
             <option value="">Order By</option>
             {ORDER_VALUES.map((ORDER_VALUES, i) => (
@@ -155,17 +169,20 @@ class SearchForm extends Component {
             ;
           </select>
         </div>
+        <div className="input-field col s3">
+          <select id={'select-option'} name="size_rooms" onChange={this.handleChange}>
+            <option value="">Rooms</option>
+            {SIZE_ROOMS.map((room, i) => (
+              <option key={i} value={room}>
+                {room}
+              </option>
+            ))}
+            ;
+          </select>
+        </div>
       </div>
     );
-    return this.state.totalHouses === 0 ? (
-      <form onSubmit={this.onFormSubmit}>
-        {searchFields}
-        <br />
-        <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
-        <br />
-        <h2> No Houses found </h2>
-      </form>
-    ) : (
+    return this.state.totalHouses ? (
       <form onSubmit={this.onFormSubmit}>
         {searchFields}
         <br />
@@ -175,6 +192,22 @@ class SearchForm extends Component {
         <div className="totals">
           <h5>Total Houses: {this.state.totalHouses}</h5>
         </div>
+        {/* {Array.form({ length: pages || 0 }, (val, index) => {
+          const _pages = index + 1;
+          return (
+            <div className={`${pages == _pages ? 'active' : ''}`} onClick={this.onPageChange}>
+              {_pages}
+            </div>
+          );
+        })} */}
+      </form>
+    ) : (
+      <form onSubmit={this.onFormSubmit}>
+        {searchFields}
+        <br />
+        <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        <br />
+        <h3>No Houses Found...</h3>
       </form>
     );
   }

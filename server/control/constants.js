@@ -1,5 +1,5 @@
 const PORT = 4444;
-const HOUSES_PER_PAGE = 5;
+const HOUSES_PER_PAGE = 3;
 
 module.exports = {
   PORT,

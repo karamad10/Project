@@ -46,7 +46,7 @@ li {
 
 #houses-links {
   width: 31.5%;
-  height: 220px;
+  height: 240px;
   padding: 20px;
   margin: 5px;
   border: 2px solid teal;
@@ -56,4 +56,8 @@ li {
 .totals {
   margin-left: 10px;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', Verdana, sans-serif;
+}
+
+.active {
+  background-color: #2e6b6d;
 }

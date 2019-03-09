@@ -5,11 +5,17 @@ import SearchForm from './SearchForm';
 class Houses extends Component {
   state = {
     houses: [],
+    errors: [],
     loading: false
   };
 
-  onSearchResults = houses => {
-    this.setState({ houses });
+  onSearchResults = (houses, errors) => {
+    console.log(errors);
+    if (errors) {
+      this.setState({ houses: [], errors });
+    } else {
+      this.setState({ errors: [], houses });
+    }
   };
 
   render() {
@@ -34,12 +40,23 @@ class Houses extends Component {
         );
       });
     }
-    return (
+    console.log(this.state);
+    return this.state.errors.length ? (
       <>
         <h1>Houses</h1>
         <br />
         <div>
-          <SearchForm onSearchResults={this.onSearchResults} />
+          <SearchForm onSearchResults={this.onSearchResults} props={this.props} />
+        </div>
+        <h2>{this.state.errors}</h2>
+        <br />
+      </>
+    ) : (
+      <>
+        <h1>Houses</h1>
+        <br />
+        <div>
+          <SearchForm onSearchResults={this.onSearchResults} props={this.props} />
         </div>
         <br />
         <div className="row">{house}</div>
