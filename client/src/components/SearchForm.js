@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
 import services from '../services/GetInfo';
+import { MIN_PRISES, MAX_PRISES, ORDER_VALUES, SIZE_ROOMS } from '../services/constants';
 
 class SearchForm extends Component {
   state = {
     houses: [],
+    countries: [],
     cities: [],
+    pageSize: null,
+    totalHouses: null,
     SearchCriteria: {
       price_min: 0,
       price_max: 1000000000,
-      city: '',
+      size_rooms: 1,
+      location_country: '',
+      location_city: '',
       order: 'location_country_asc',
       page: 1
     }
@@ -16,10 +22,11 @@ class SearchForm extends Component {
 
   componentDidMount() {
     this.fetchSearchResults();
-    services.SearchCities(this.state.houses).then(cities => {
+    services.SearchCitiesAndCountries(this.state.houses).then(data => {
       this.setState({
         ...this.state,
-        cities
+        cities: data.cities,
+        countries: data.countries
       });
     });
   }
@@ -36,8 +43,12 @@ class SearchForm extends Component {
       }, [])
       .join('&');
     console.log('Query String:', queryString);
-    services.getSearchInfo(queryString).then(houses => {
-      this.props.onSearchResults(houses);
+    services.getSearchInfo(queryString).then(data => {
+      this.setState({
+        pageSize: data.pageSize,
+        totalHouses: data.total
+      });
+      this.props.onSearchResults(data.houses);
     });
   };
 
@@ -59,17 +70,16 @@ class SearchForm extends Component {
   };
 
   render() {
-    // console.log(this.props.houses);
-    // console.log('state', this.state);
-    // const { price_min, price_max, city, order, page } = this.state.SearchCriteria;
-
-    const MIN_PRISES = [0, 10000, 20000, 30000, 40000, 50000];
-    const MAX_PRISES = [0, 10000, 20000, 30000, 40000, 50000, 60000];
-    const ORDER = ['City ASC', 'City DESC', 'Price ASC', 'Price DESC'];
     let CITIES = [];
+    let COUNTRIES = [];
     this.state.cities.forEach(cityObj => {
       Object.values(cityObj).map(city => {
         return CITIES.push(city);
+      });
+    });
+    this.state.countries.forEach(countObj => {
+      Object.values(countObj).map(country => {
+        return COUNTRIES.push(country);
       });
     });
 
@@ -102,7 +112,18 @@ class SearchForm extends Component {
           </select>
         </div>
         <div className="input-field col s3">
-          <select id={'select-option'} name="city" onChange={this.handleChange}>
+          <select id={'select-option'} name="location_country" onChange={this.handleChange}>
+            <option value="">Select Country</option>
+            {COUNTRIES.map((Country, i) => (
+              <option key={i} value={Country}>
+                {Country}
+              </option>
+            ))}
+            ;
+          </select>
+        </div>
+        <div className="input-field col s3">
+          <select id={'select-option'} name="location_city" onChange={this.handleChange}>
             <option value="">Select City</option>
             {CITIES.map((city, i) => (
               <option key={i} value={city}>
@@ -113,11 +134,22 @@ class SearchForm extends Component {
           </select>
         </div>
         <div className="input-field col s3">
+          <select id={'select-option'} name="size_rooms" onChange={this.handleChange}>
+            <option value="">Number of rooms</option>
+            {SIZE_ROOMS.map((room, i) => (
+              <option key={i} value={room}>
+                {room}
+              </option>
+            ))}
+            ;
+          </select>
+        </div>
+        <div className="input-field col s3">
           <select id={'select-option'} name="order" onChange={this.handleChange}>
             <option value="">Order By</option>
-            {ORDER.map((order, i) => (
-              <option key={i} value={order}>
-                {order}
+            {ORDER_VALUES.map((ORDER_VALUES, i) => (
+              <option key={i} value={ORDER_VALUES}>
+                {ORDER_VALUES}
               </option>
             ))}
             ;
@@ -125,11 +157,24 @@ class SearchForm extends Component {
         </div>
       </div>
     );
-    return (
+    return this.state.totalHouses === 0 ? (
       <form onSubmit={this.onFormSubmit}>
         {searchFields}
         <br />
         <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        <br />
+        <h2> No Houses found </h2>
+      </form>
+    ) : (
+      <form onSubmit={this.onFormSubmit}>
+        {searchFields}
+        <br />
+        <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        <br />
+        <br />
+        <div className="totals">
+          <h5>Total Houses: {this.state.totalHouses}</h5>
+        </div>
       </form>
     );
   }

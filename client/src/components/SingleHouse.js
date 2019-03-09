@@ -16,7 +16,6 @@ class SingleHouse extends Component {
   }
 
   render() {
-    console.log(this.state);
     let house = this.state.house;
     const clickedHouse = this.state.house ? (
       <div className="house">

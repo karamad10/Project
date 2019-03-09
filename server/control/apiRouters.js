@@ -1,26 +1,10 @@
 const express = require('express');
+const { HOUSES_PER_PAGE } = require('./constants');
 const { execQuery } = require('../db');
-const { validateInput, sqlDataFields } = require('../control/validator');
+const { validateInput, sqlDataFields } = require('./inputValidation');
+const { validateSearch } = require('./searchValidation');
 const apiRouter = express.Router();
 
-const new_date = new Date();
-function isNanAndPos(num) {
-  if (Number.isNaN(num) || num < 0) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-// function orderBy(x) {
-//   let index = x.lastIndexOf('_');
-// }
-let DEFAULT_VALUES = {
-  price_min: 0,
-  price_max: 999999999,
-  order: 'location_country_asc',
-  page: 1
-};
 const addHouses = `
 REPLACE INTO Houses (
   link,
@@ -54,57 +38,34 @@ const getHouseDetails = async (req, res) => {
       res.redirect(404, '/api/houses/');
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
 
 const deleteHouse = (req, res) => {
   const { id } = req.params;
-  const objIndex = fakeDB.findIndex(obj => obj.id == id);
-  if (fakeDB[objIndex]) {
-    fakeDB.splice(objIndex, 1);
-    res.send(fakeDB);
+  const objIndex = houses.findIndex(obj => obj.id == id);
+  if (houses[objIndex]) {
+    houses.splice(objIndex, 1);
+    res.send(houses);
   } else res.status(404).send(` item with id ${id} does not exist`);
 };
 
 const getHouses = async (req, res) => {
-  console.log('Req Q:', req.query);
+  // console.log('Req Q:', req.query);
+  let SEARCH_VALUES = req.query;
+  const { errors, valid, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
 
-  DEFAULT_VALUES = req.query;
-  let { price_min, price_max, page, order } = DEFAULT_VALUES;
-  price_max = parseInt(price_max, 10);
-  page = parseInt(page, 10);
-  // if (isNanAndPos(price_max) === false && isNanAndPos(page) === false) {
-  //   return res.status(400).json({
-  //     error: 'invalid value'
-  //   });
-  // }
-  if (price_min >= price_max) {
-    return res.status(400).json({
-      error: 'price_max should be bigger than price_min'
-    });
+  if (!valid) {
+    res.status(400).json({ error: errors });
+    console.log('ERRORS: ', errors);
   }
-  let order_field, order_direction;
-  let index = order.lastIndexOf('_');
-  if (index > 0) {
-    order_field = order.slice(0, index);
-    order_direction = order.slice(index + 1);
-    if (['asc', 'desc'].indexOf(order_direction) === -1)
-      return res.status(400).json({
-        error: 'invalid order value'
-      });
-  } else {
-    return res.status(400).json({
-      error: 'invalid order value'
-    });
-  }
+
   try {
-    const houses = await execQuery(`select * from houses`);
-    res.json(houses);
-    // return res.json(report);
+    const total = await execQuery(queryTotal, params);
+    const houses = await execQuery(queryItems, params);
+    res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -149,12 +110,15 @@ const postHouses = (req, res) => {
   } else res.send(report);
 };
 
-const getCities = async (req, res) => {
+const getCitiesAndCountries = async (req, res) => {
   try {
     const cities = await execQuery(
       `SELECT DISTINCT location_city FROM houses ORDER BY location_city`
     );
-    res.json(cities);
+    const countries = await execQuery(
+      `SELECT DISTINCT location_country FROM houses ORDER BY location_country`
+    );
+    res.json({ cities, countries });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -169,7 +133,7 @@ apiRouter
   .get(getHouses)
   .post(postHouses);
 
-apiRouter.route('/Houses/cities/all').get(getCities);
+apiRouter.route('/Houses/citiesAndCountries/all').get(getCitiesAndCountries);
 
 apiRouter
   .route('/Houses/:id')

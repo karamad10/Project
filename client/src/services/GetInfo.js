@@ -6,8 +6,10 @@ export default class GetInfo {
     return fetch(`${BASE_URL}/houses`).then(response => this.checkStatusCode(response));
   }
 
-  static SearchCities() {
-    return fetch(`${BASE_URL}/houses/cities/all`).then(response => this.checkStatusCode(response));
+  static SearchCitiesAndCountries() {
+    return fetch(`${BASE_URL}/houses/citiesAndCountries/all`).then(response =>
+      this.checkStatusCode(response)
+    );
   }
 
   static getSearchInfo(searchQuery) {
