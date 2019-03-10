@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import SearchForm from './SearchForm';
+import HousesDetails from './HousesDetails';
 
 class Houses extends Component {
   state = {
@@ -10,37 +10,17 @@ class Houses extends Component {
   };
 
   onSearchResults = (houses, errors) => {
-    console.log(errors);
     if (errors) {
-      this.setState({ houses: [], errors });
+      this.setState({ houses: [], loading: false, errors });
     } else {
-      this.setState({ errors: [], houses });
+      this.setState({ errors: [], loading: false, houses });
     }
   };
 
   render() {
-    const { houses, loading } = this.state;
-    let house;
+    const { loading } = this.state;
     if (loading) return <div>Loading...</div>;
-    if (houses) {
-      house = houses.map(house => {
-        return (
-          <div id="houses-links" className="col 6" key={house.id}>
-            <Link to={'/Houses/' + house.id}>
-              <div>{`Image: ${house.images}`}</div>
-              <div>{`Country: ${house.location_country}`}</div>
-              <div>{`City: ${house.location_city}`}</div>
-              <div>{`Rooms: ${house.size_rooms}`}</div>
-              <div>{`Link: ${house.link}`}</div>
-              <div>{`Date: ${house.market_date}`}</div>
-              <div>{`Address: ${house.location_address}`}</div>
-              <div>{`Price: ${house.price_value} ${house.price_currency}`}</div>
-            </Link>
-          </div>
-        );
-      });
-    }
-    console.log(this.state);
+
     return this.state.errors.length ? (
       <>
         <h1>Houses</h1>
@@ -59,7 +39,10 @@ class Houses extends Component {
           <SearchForm onSearchResults={this.onSearchResults} props={this.props} />
         </div>
         <br />
-        <div className="row">{house}</div>
+        <div className="row">
+          <HousesDetails houses={this.state.houses} />
+        </div>
+        {/* <div className="row">{house}</div> */}
       </>
     );
   }

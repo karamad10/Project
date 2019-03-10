@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-// import {Nav , Home , Houses , Houses2, SingleHouse, SingleHouse2,ErrorPage} from "./components"
+// import Houses2 from './components/HousesRedux';
+// import SingleHouse2 from './components/SingleHouseRedux';
 import Nav from './components/Nav';
 import Home from './components/Home';
 import ErrorPage from './components/ErrorPage';
-// eslint-disable-next-line no-unused-vars
 import Houses from './components/Houses';
-// eslint-disable-next-line no-unused-vars
-import Houses2 from './components/HousesRedux';
 import SingleHouse from './components/SingleHouse';
-// eslint-disable-next-line no-unused-vars
-import SingleHouse2 from './components/SingleHouseRedux';
+
 import AddHouse from './components/AddHouse';
 
 class App extends Component {
