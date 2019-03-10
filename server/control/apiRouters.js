@@ -57,7 +57,7 @@ const getHouses = async (req, res) => {
   const { errors, valid, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
 
   if (!valid) {
-    res.status(400).json({ error: errors });
+    res.status(500).json({ error: errors });
   } else {
     try {
       const total = await execQuery(queryTotal, params);

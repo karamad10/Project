@@ -5,22 +5,18 @@ import HousesDetails from './HousesDetails';
 class Houses extends Component {
   state = {
     houses: [],
-    errors: [],
-    loading: false
+    errors: []
   };
 
   onSearchResults = (houses, errors) => {
     if (errors) {
-      this.setState({ houses: [], loading: false, errors });
+      this.setState({ houses: [], errors });
     } else {
-      this.setState({ errors: [], loading: false, houses });
+      this.setState({ errors: [], houses });
     }
   };
 
   render() {
-    const { loading } = this.state;
-    if (loading) return <div>Loading...</div>;
-
     return this.state.errors.length ? (
       <>
         <h1>Houses</h1>

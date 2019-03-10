@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import services from '../services/GetInfo';
 import SearchFields from './SearchFields';
 // import Pages from './Pages';
-// import { MIN_PRISES, MAX_PRISES, ORDER_VALUES, SIZE_ROOMS } from '../services/constants';
 
 class SearchForm extends Component {
   state = {
@@ -23,6 +22,7 @@ class SearchForm extends Component {
   };
 
   componentDidMount() {
+    this.setState({ loading: true });
     const params = this.props.props.location.search
       .replace(/^\?/, '')
       .split('&')
@@ -37,6 +37,7 @@ class SearchForm extends Component {
       this.setState({
         ...this.state,
         ...params,
+        loading: false,
         cities: data.cities,
         countries: data.countries
       });
@@ -91,12 +92,12 @@ class SearchForm extends Component {
   };
 
   render() {
-    // const { houses, totalHouses, pageSize } = this.state;
+    // const { houses, totalHouses, pageSize, loading } = this.state;
     // const { page } = this.state.SearchCriteria;
 
     // // console.log(page, pageSize, totalHouses);
     // const pages = Math.ceil(totalHouses / pageSize);
-
+    if (this.state.loading) return <h3>loading.....</h3>;
     return this.state.totalHouses ? (
       <form onSubmit={this.onFormSubmit}>
         <SearchFields state={this.state} handleChange={this.handleChange} />
