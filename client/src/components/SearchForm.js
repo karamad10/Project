@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import services from '../services/GetInfo';
 import SearchFields from './SearchFields';
-// import Pages from './Pages';
+import Pages from './Pages';
 
 class SearchForm extends Component {
   state = {
@@ -92,30 +92,34 @@ class SearchForm extends Component {
   };
 
   render() {
-    // const { houses, totalHouses, pageSize, loading } = this.state;
-    // const { page } = this.state.SearchCriteria;
+    const { totalHouses, pageSize } = this.state;
+    const { page } = this.state.SearchCriteria;
+    console.log(page, pageSize, totalHouses);
+    const pages = Math.ceil(totalHouses / pageSize);
 
-    // // console.log(page, pageSize, totalHouses);
-    // const pages = Math.ceil(totalHouses / pageSize);
     if (this.state.loading) return <h3>loading.....</h3>;
     return this.state.totalHouses ? (
       <form onSubmit={this.onFormSubmit}>
         <SearchFields state={this.state} handleChange={this.handleChange} />
-        <br />
         <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
-        <br />
         <div className="totals">
           <h5>Total Houses: {this.state.totalHouses}</h5>
+        </div>
+        <div>
+          <Pages pages={pages} />
         </div>
       </form>
     ) : (
       <form onSubmit={this.onFormSubmit}>
-        <SearchFields state={this.state} handleChange={this.handleChange} />
-        <br />
-        <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
-        <br />
-        <br />
-        <h3>No Houses Found...</h3>
+        <div>
+          <SearchFields state={this.state} handleChange={this.handleChange} />
+        </div>
+        <div>
+          <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        </div>
+        <div>
+          <h3>No Houses Found...</h3>
+        </div>
       </form>
     );
   }

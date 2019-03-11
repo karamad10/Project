@@ -12,7 +12,7 @@ class Houses extends Component {
     if (errors) {
       this.setState({ houses: [], errors });
     } else {
-      this.setState({ errors: [], houses });
+      this.setState({ houses });
     }
   };
 
@@ -38,7 +38,6 @@ class Houses extends Component {
         <div className="row">
           <HousesDetails houses={this.state.houses} />
         </div>
-        {/* <div className="row">{house}</div> */}
       </>
     );
   }

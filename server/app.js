@@ -17,4 +17,12 @@ app.use('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
+// app.use(function(req, res, next) {
+//   return res.status(404).send({ message: 'Route' + req.url + ' Not found.' });
+// });
+
+// app.use(function(err, req, res, next) {
+//   return res.status(500).send({ error: err });
+// });
+
 module.exports = app;

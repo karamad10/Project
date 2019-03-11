@@ -56,16 +56,16 @@ const getHouses = async (req, res) => {
   let SEARCH_VALUES = req.query;
   const { errors, valid, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
 
-  if (!valid) {
-    res.status(500).json({ error: errors });
-  } else {
-    try {
+  try {
+    if (valid) {
       const total = await execQuery(queryTotal, params);
       const houses = await execQuery(queryItems, params);
       res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
-    } catch (error) {
-      return res.status(500).json({ error: error });
+    } else {
+      return res.status(500).json({ error: errors });
     }
+  } catch (error) {
+    return res.status(500).json({ error: error });
   }
 };
 
