@@ -1,7 +1,5 @@
 const { HOUSES_PER_PAGE } = require('./constants');
 // const db = require('../db');
-let valid = [];
-let errors = [];
 
 function isNanAndPos(num) {
   if (Number.isNaN(num) || num < 0) {
@@ -12,6 +10,8 @@ function isNanAndPos(num) {
 }
 
 const validateSearch = SEARCH_VALUES => {
+  let valid = [];
+  let errors = [];
   let {
     price_min,
     price_max,
@@ -54,7 +54,7 @@ const validateSearch = SEARCH_VALUES => {
     errors.push('invalid order value');
   }
 
-  if (!errors) {
+  if (errors.length === 0) {
     valid.push(SEARCH_VALUES);
   }
   const offset = (page - 1) * HOUSES_PER_PAGE;
@@ -87,7 +87,7 @@ const validateSearch = SEARCH_VALUES => {
   `;
 
   return {
-    valid: errors.length === 0,
+    valid,
     errors,
     params,
     queryTotal,

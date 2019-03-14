@@ -1,27 +1,10 @@
 const express = require('express');
-const { HOUSES_PER_PAGE } = require('./constants');
+const { HOUSES_PER_PAGE, addHouses } = require('./constants');
 const { execQuery } = require('../db');
 const { validateInput, sqlDataFields } = require('./inputValidation');
 const { validateSearch } = require('./searchValidation');
 const apiRouter = express.Router();
 
-const addHouses = `
-REPLACE INTO Houses (
-  link,
-  market_date,
-  location_country,
-  location_city,
-  location_address,
-  size_living_area,
-  size_rooms,
-  price_value,
-  price_currency,
-  description,
-  title,
-  images,
-  sold
-) VALUES ?
-`;
 let validHouses = [];
 let invalidHouses = [];
 let errors = [];
@@ -52,16 +35,16 @@ const deleteHouse = (req, res) => {
 };
 
 const getHouses = async (req, res) => {
-  // console.log('Req Q:', req.query);
   let SEARCH_VALUES = req.query;
   const { errors, valid, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
 
   try {
-    if (valid) {
+    if (errors.length === 0) {
       const total = await execQuery(queryTotal, params);
       const houses = await execQuery(queryItems, params);
       res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
     } else {
+      console.log('E', errors);
       return res.status(500).json({ error: errors });
     }
   } catch (error) {

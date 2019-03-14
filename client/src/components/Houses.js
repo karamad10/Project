@@ -8,12 +8,8 @@ class Houses extends Component {
     errors: []
   };
 
-  onSearchResults = (houses, errors) => {
-    if (errors) {
-      this.setState({ houses: [], errors });
-    } else {
-      this.setState({ houses });
-    }
+  onSearchResults = (houses = [], errors = []) => {
+    this.setState({ houses, errors });
   };
 
   render() {

@@ -3,17 +3,39 @@ import React, { Component } from 'react';
 class Pages extends Component {
   state = {
     currentPage: 1,
-    lastPage: 1,
-    totalPages: this.props.pages
+    totalPages: this.props.pages,
+    pages: 0
   };
 
-  onClick = page => {
-    console.log('set page', page);
+  onClick = pageNum => {
+    this.setState({
+      currentPage: pageNum
+    });
+    this.props.handelPageChange(pageNum);
   };
+
+  pagesButtons = () => {
+    const { currentPage } = this.state;
+    let pagesNumbers = [];
+    for (let i = 1; i <= this.props.pages; i++) {
+      pagesNumbers.push(i);
+    }
+    let pages = pagesNumbers.map((pageNum, i) => {
+      return (
+        <input
+          key={i}
+          className={`${currentPage === pageNum ? 'active' : ''}`}
+          type="button"
+          value={pageNum}
+          onClick={() => this.onClick(pageNum, pagesNumbers)}
+        />
+      );
+    });
+    return pages;
+  };
+
   render() {
-    const { pages } = this.props;
-    console.log(this.state);
-    return <div>{pages}</div>;
+    return <div>{this.pagesButtons()}</div>;
   }
 }
 

@@ -60,7 +60,6 @@ class SearchForm extends Component {
       this.props.props.history.push(this.props.props.location.pathname + '?' + queryString);
     }
 
-    // console.log('Query String:', queryString);
     services.getSearchInfo(queryString).then(data => {
       this.setState({
         pageSize: data.pageSize,
@@ -70,8 +69,20 @@ class SearchForm extends Component {
     });
   };
 
-  onPageChange = page => {
-    console.log('set page', page);
+  onPageChange = (page, totalPages) => {
+    this.setState(
+      {
+        ...this.state,
+        pageSize: totalPages,
+        SearchCriteria: {
+          ...this.state.SearchCriteria,
+          page
+        }
+      },
+      () => {
+        this.fetchSearchResults(true);
+      }
+    );
   };
 
   handleChange = e => {
@@ -88,39 +99,37 @@ class SearchForm extends Component {
   onFormSubmit = e => {
     e.preventDefault();
     this.fetchSearchResults(true);
-    console.log('Form Submitted');
   };
 
   render() {
-    const { totalHouses, pageSize } = this.state;
-    const { page } = this.state.SearchCriteria;
-    console.log(page, pageSize, totalHouses);
-    const pages = Math.ceil(totalHouses / pageSize);
-
-    if (this.state.loading) return <h3>loading.....</h3>;
-    return this.state.totalHouses ? (
+    let { totalHouses, pageSize, pages } = this.state;
+    pages = Math.ceil(totalHouses / pageSize);
+    console.log(pages);
+    const alwaysRendered = (
       <form onSubmit={this.onFormSubmit}>
         <SearchFields state={this.state} handleChange={this.handleChange} />
         <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+      </form>
+    );
+
+    if (this.state.loading) return <h3>loading.....</h3>;
+    return this.state.totalHouses ? (
+      <>
+        <div>{alwaysRendered}</div>
         <div className="totals">
           <h5>Total Houses: {this.state.totalHouses}</h5>
         </div>
         <div>
-          <Pages pages={pages} />
+          <Pages total={totalHouses} pages={pages} handelPageChange={this.onPageChange} />
         </div>
-      </form>
+      </>
     ) : (
-      <form onSubmit={this.onFormSubmit}>
-        <div>
-          <SearchFields state={this.state} handleChange={this.handleChange} />
-        </div>
-        <div>
-          <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
-        </div>
+      <>
+        <div>{alwaysRendered}</div>
         <div>
           <h3>No Houses Found...</h3>
         </div>
-      </form>
+      </>
     );
   }
 }
