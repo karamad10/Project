@@ -69,8 +69,8 @@ const validateInput = houseObj => {
     if (!isNaN(location_country) || !isNaN(location_city)) {
       errors.push('invalid Location');
     }
-    if (location_address.length < 10 || location_address.length > 25) {
-      errors.push('address should be 10-25 characters');
+    if (location_address.length < 5 || location_address.length > 50) {
+      errors.push('address should be 5-50 characters');
     }
     if (isNaN(size_living_area) || size_living_area > 1000 || size_living_area < 0) {
       errors.push('size should be be between 0 and 1000');
@@ -87,8 +87,8 @@ const validateInput = houseObj => {
     if (description.length < 10) {
       errors.push('description should be at least 10 characters');
     }
-    if (title.length < 30 && title.length < 5) {
-      errors.push('title should be 5-30 characters');
+    if (title.length < 50 && title.length < 5) {
+      errors.push('title should be 5-50 characters');
     }
     if (sold < 0 || sold > 1) {
       errors.push('sold is either 1 or 0');
