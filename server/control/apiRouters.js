@@ -3,16 +3,17 @@ const { HOUSES_PER_PAGE, addHouses } = require('./constants');
 const { execQuery } = require('../db');
 const { validateInput, sqlDataFields } = require('./inputValidation');
 const { validateSearch } = require('./searchValidation');
+
 const apiRouter = express.Router();
 
-let validHouses = [];
-let invalidHouses = [];
-let errors = [];
+const validHouses = [];
+const invalidHouses = [];
+const housesErrors = [];
 
 const getHouseDetails = async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
   try {
-    const houses = await execQuery(`select * from houses`);
+    const houses = await execQuery('select * from houses');
     const objIndex = houses.findIndex(house => house.id === id);
     if (houses[objIndex]) {
       res.send(houses[objIndex]);
@@ -27,16 +28,16 @@ const getHouseDetails = async (req, res) => {
 
 const deleteHouse = (req, res) => {
   const { id } = req.params;
-  const objIndex = houses.findIndex(obj => obj.id == id);
-  if (houses[objIndex]) {
-    houses.splice(objIndex, 1);
-    res.send(houses);
+  const objIndex = validHouses.findIndex(obj => obj.id === id);
+  if (validHouses[objIndex]) {
+    validHouses.splice(objIndex, 1);
+    res.send(validHouses);
   } else res.status(404).send(` item with id ${id} does not exist`);
 };
 
 const getHouses = async (req, res) => {
-  let SEARCH_VALUES = req.query;
-  const { errors, valid, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
+  const SEARCH_VALUES = req.query;
+  const { errors, params, queryTotal, queryItems } = validateSearch(SEARCH_VALUES);
 
   try {
     if (errors.length === 0) {
@@ -44,16 +45,15 @@ const getHouses = async (req, res) => {
       const houses = await execQuery(queryItems, params);
       res.json({ total: total[0].total, houses, pageSize: HOUSES_PER_PAGE });
     } else {
-      console.log('E', errors);
       return res.status(500).json({ error: errors });
     }
   } catch (error) {
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error });
   }
 };
 
 const postHouses = (req, res) => {
-  let inputData = req.body;
+  const inputData = req.body;
   if (!Array.isArray(inputData)) {
     res.status(400).json({ error: 'Data must be an array' });
   }
@@ -70,12 +70,13 @@ const postHouses = (req, res) => {
     }
   });
   invalidHouses.forEach(item => {
-    return errors.push(item.errors);
+    housesErrors.push(item.errors);
   });
+
   const report = {
     validHouses,
     invalidHouses,
-    errors
+    housesErrors
   };
 
   const sqlDataRaw = validHouses.map(item => sqlDataFields(item.rawData));
@@ -95,10 +96,10 @@ const postHouses = (req, res) => {
 const getCitiesAndCountries = async (req, res) => {
   try {
     const cities = await execQuery(
-      `SELECT DISTINCT location_city FROM houses ORDER BY location_city`
+      'SELECT DISTINCT location_city FROM houses ORDER BY location_city'
     );
     const countries = await execQuery(
-      `SELECT DISTINCT location_country FROM houses ORDER BY location_country`
+      'SELECT DISTINCT location_country FROM houses ORDER BY location_country'
     );
     res.json({ cities, countries });
   } catch (err) {

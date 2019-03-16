@@ -1,6 +1,16 @@
 {
   "extends": "airbnb",
   "rules": {
-    "linebreak-style": "off"
+    "linebreak-style": "off",
+    "arrow-parens": "off",
+    "comma-dangle": "off",
+    "wrap-iife": "off",
+    "object-curly-newline": "off",
+    "consistent-return": "off",
+    "operator-linebreak": "off",
+    "no-restricted-globals": "off",
+    "no-lone-blocks": "off",
+    "arrow-body-style": "off",
+    "no-else-return": "off"
   }
 }

@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS Houses;
 
 CREATE TABLE Houses (
   `id` INT auto_increment NOT NULL,
-  `link` VARCHAR(50) NOT NULL,
+  `link` VARCHAR(150) NOT NULL,
   `market_date` DATE ,
   `location_country` VARCHAR(50) NOT NULL,
   `location_city` VARCHAR(50) NOT NULL,

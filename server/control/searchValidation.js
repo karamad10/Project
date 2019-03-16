@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const { HOUSES_PER_PAGE } = require('./constants');
 // const db = require('../db');
 
@@ -10,17 +11,10 @@ function isNanAndPos(num) {
 }
 
 const validateSearch = SEARCH_VALUES => {
-  let valid = [];
-  let errors = [];
-  let {
-    price_min,
-    price_max,
-    page,
-    size_rooms,
-    location_city,
-    location_country,
-    order
-  } = SEARCH_VALUES;
+  const valid = [];
+  const errors = [];
+  let { price_min, price_max, page, size_rooms } = SEARCH_VALUES;
+  const { location_city, location_country, order } = SEARCH_VALUES;
 
   size_rooms = parseInt(size_rooms, 10);
   price_min = parseInt(price_min, 10);
@@ -40,7 +34,9 @@ const validateSearch = SEARCH_VALUES => {
     errors.push('rooms should be between 1 and 10');
   }
 
-  let order_field, order_direction, index;
+  let order_field;
+  let order_direction;
+  let index;
   if (order) {
     index = order.lastIndexOf('_');
   }
@@ -58,14 +54,14 @@ const validateSearch = SEARCH_VALUES => {
     valid.push(SEARCH_VALUES);
   }
   const offset = (page - 1) * HOUSES_PER_PAGE;
-  const conditions = [`price_value between ? and ?`];
+  const conditions = ['price_value between ? and ?'];
   const params = [price_min, price_max];
   if (location_city) {
-    conditions.push(`location_city = ?`);
+    conditions.push('location_city = ?');
     params.push(location_city);
   }
   if (location_country) {
-    conditions.push(`location_country = ?`);
+    conditions.push('location_country = ?');
     params.push(location_country);
   }
   const queryBody = `
@@ -78,7 +74,7 @@ const validateSearch = SEARCH_VALUES => {
   ${queryBody}
   `;
 
-  let queryItems = `
+  const queryItems = `
   SELECT * ${queryBody}
   ORDER BY
   ${order_field} ${order_direction}

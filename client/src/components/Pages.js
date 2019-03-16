@@ -35,7 +35,7 @@ class Pages extends Component {
   };
 
   render() {
-    return <div>{this.pagesButtons()}</div>;
+    return <div className="pagesButtons">{this.pagesButtons()}</div>;
   }
 }
 

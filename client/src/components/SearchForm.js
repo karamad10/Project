@@ -32,16 +32,20 @@ class SearchForm extends Component {
         params[name] = value;
         return params;
       }, {});
-
-    services.SearchCitiesAndCountries(this.state.houses).then(data => {
-      this.setState({
-        ...this.state,
-        ...params,
-        loading: false,
-        cities: data.cities,
-        countries: data.countries
-      });
-    }, this.fetchSearchResults());
+    this.setState({ SearchCriteria: { ...this.state.SearchCriteria, ...params } }, () => {
+      services.SearchCitiesAndCountries(this.state.houses).then(data => {
+        this.setState({
+          ...this.state,
+          loading: false,
+          cities: data.cities,
+          countries: data.countries,
+          SearchCriteria: {
+            ...this.state.SearchCriteria,
+            ...params
+          }
+        });
+      }, this.fetchSearchResults());
+    });
   }
 
   fetchSearchResults = (updateURL = false) => {
@@ -104,11 +108,12 @@ class SearchForm extends Component {
   render() {
     let { totalHouses, pageSize, pages } = this.state;
     pages = Math.ceil(totalHouses / pageSize);
-    console.log(pages);
     const alwaysRendered = (
       <form onSubmit={this.onFormSubmit}>
         <SearchFields state={this.state} handleChange={this.handleChange} />
-        <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        <div className="submitButton">
+          <input type="submit" value="submit" onSubmit={this.onFormSubmit} />
+        </div>
       </form>
     );
 
