@@ -42,6 +42,7 @@ li {
 
 .housesRow {
   display: flex;
+  flex-wrap: wrap;
   margin: 20px;
   padding: 20px;
 }
@@ -52,13 +53,11 @@ li {
 }
 
 #houses-links {
-  flex-basis: 33%;
-  height: 320px;
-  padding: 10px;
-  margin: 5px;
-  border: 4px solid teal;
-  overflow: hidden;
-  display: flex;
+  flex-basis: 31%;
+  height: 52vh;
+  padding: 12px;
+  margin: 1%;
+  border: 6px solid teal;
 }
 
 .houseInfoContainer {
@@ -68,8 +67,14 @@ li {
 }
 
 .houseImg {
-  width: 175px;
+  width: 174px;
   border-radius: 20%;
+}
+
+.houseDetails {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  padding: 2px;
+  font-size: 15px;
 }
 
 a {

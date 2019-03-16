@@ -11,7 +11,7 @@ class Report extends Component {
       <div key={i}>
         Errors:<h4>{JSON.stringify(house.errors, null, 2)}</h4>
         data:<h5>{JSON.stringify(house.rawData, null, 2)}</h5>
-      </div>
+      </div>  
     ));
 
     console.log(this.state);

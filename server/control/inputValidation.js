@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 const { requiredFields } = require('./constants');
+const { validateURL, validateDate } = require('./helpers/functions');
 
 const validateInput = houseObj => {
   const errors = [];
@@ -20,31 +21,7 @@ const validateInput = houseObj => {
     sold
   } = houseObj;
 
-  function validateDate(date) {
-    const selectedDate = new Date(date);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    if (selectedDate < now) {
-      return true;
-    } else {
-      return true;
-    }
-  }
-
-  function validURL(x) {
-    const pattern = new RegExp(
-      '^(https?:\\/\\/)?' +
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|' +
-        '((\\d{1,3}\\.){3}\\d{1,3}))' +
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-        '(\\?[;&amp;a-z\\d%_.~+=-]*)?' +
-        '(\\#[-a-z\\d_]*)?$',
-      'i'
-    );
-    return pattern.test(x);
-  }
-
-  const validUrl = validURL(link);
+  const validUrl = validateURL(link);
   const validDate = validateDate(market_date);
 
   if (typeof houseObj !== 'object') {
@@ -55,12 +32,12 @@ const validateInput = houseObj => {
   } else {
     const imgValidation = images.split(',');
     imgValidation.forEach((img, i) => {
-      if (!validURL(img) === true) {
+      if (!validateURL(img) === true) {
         errors.push(`image number ${i + 1} is not valid`);
       }
     });
 
-    if (!validUrl || validUrl.length < 150) {
+    if (!validUrl || validUrl.length < 200) {
       errors.push(' Invalid URL ');
     }
     if (!validDate) {

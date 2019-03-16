@@ -10,12 +10,14 @@ class HousesDetails extends Component {
           <div className="houseInfoContainer">
             <Link to={'/Houses/' + house.id}>
               <img className="houseImg" src={house.images} alt="" />
-              <div>{`Country: ${house.location_country}`}</div>
-              <div>{`City: ${house.location_city}`}</div>
-              <div>{`Rooms: ${house.size_rooms}`}</div>
-              <div>{`Date: ${house.market_date}`}</div>
-              <div>{`Address: ${house.location_address}`}</div>
-              <div>{`Price: ${house.price_value} ${house.price_currency}`}</div>
+              <div className="houseDetails">{`Country: ${house.location_country}`}</div>
+              <div className="houseDetails">{`City: ${house.location_city}`}</div>
+              <div className="houseDetails">{`Rooms: ${house.size_rooms}`}</div>
+              <div className="houseDetails">{`Date: ${house.market_date}`}</div>
+              <div className="houseDetails">{`Address: ${house.location_address}`}</div>
+              <div className="houseDetails">{`Price: ${house.price_value} ${
+                house.price_currency
+              }`}</div>
             </Link>
           </div>
         </div>

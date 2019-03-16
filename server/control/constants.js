@@ -1,5 +1,5 @@
 const PORT = 4444;
-const HOUSES_PER_PAGE = 3;
+const HOUSES_PER_PAGE = 9;
 const addHouses = `
 REPLACE INTO Houses (
   link,

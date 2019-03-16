@@ -13,6 +13,7 @@ class Houses extends Component {
   };
 
   render() {
+    console.log(this.state.errors);
     return this.state.errors.length ? (
       <>
         <h1>Houses</h1>
