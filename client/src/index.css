@@ -45,8 +45,14 @@ li {
   width: 80%;
 }
 
+.row {
+  display: flex;
+  margin: 20px;
+  padding: 20px;
+}
+
 #houses-links {
-  width: 30%;
+  flex-basis: 33%;
   height: 320px;
   padding: 10px;
   margin: 5px;
@@ -79,7 +85,6 @@ a {
   background-color: #2e6b6d;
 }
 
-.row,
 .pagesButtons,
 .submitButton {
   margin: 20px;

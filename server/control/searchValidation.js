@@ -27,7 +27,7 @@ const validateSearch = SEARCH_VALUES => {
   ) {
     errors.push('this value should be a positive number');
   }
-  if (price_min >= price_max) {
+  if (price_min > price_max) {
     errors.push('price_max should be bigger than price_min');
   }
   if (size_rooms <= 0 || size_rooms > 10) {
