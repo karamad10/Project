@@ -40,15 +40,15 @@ li {
   color: black;
 }
 
-#select-option {
-  display: inline-block;
-  width: 80%;
-}
-
-.row {
+.housesRow {
   display: flex;
   margin: 20px;
   padding: 20px;
+}
+
+#select-option {
+  display: inline-block;
+  width: 100%;
 }
 
 #houses-links {
@@ -85,6 +85,7 @@ a {
   background-color: #2e6b6d;
 }
 
+.row,
 .pagesButtons,
 .submitButton {
   margin: 20px;

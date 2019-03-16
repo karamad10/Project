@@ -31,7 +31,7 @@ class Houses extends Component {
           <SearchForm onSearchResults={this.onSearchResults} props={this.props} />
         </div>
         <br />
-        <div className="row">
+        <div className="housesRow">
           <HousesDetails houses={this.state.houses} />
         </div>
       </>
