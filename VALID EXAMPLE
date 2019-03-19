@@ -16,3 +16,36 @@
 "sold":1     
 }] 
 
+[
+  {
+    "link": "https://www.huislijn.nl/koopwoning/nederland/utrecht/2692087/ravellaan-91-utrecht",
+    "market_date": "2012-02-02",
+    "price_value": 250000,
+    "price_currency": "$",
+    "size_rooms": 4,
+    "size_living_area": 75,
+    "location_coordinates_lat": 0,
+    "location_coordinates_lng": 0,
+    "location_country": "Netherlands",
+    "location_city":"Amsterdam",
+    "title": "Galerijflat",
+    "image": "https://cdn-v3.huislijn.nl/objects/c5f4d7698dbb1de56d32181ecdd6a285b2e27c71/a256ea4b67cb852ac47015bd1bbb648971bd94e2/m.jpg",
+    "sold": 0
+  }
+]
+
+   {
+    "link": "https://www.huislijn.nl/koopwoning/nederland/utrecht/2692087/ravellaan-91-utrecht",
+    "market_date": "2012-02-02",
+    "price_value": 250000,
+    "price_currency": "$",
+    "size_rooms": 4,
+    "size_living_area": 75,
+    "location_coordinates_lat": 0,
+    "location_coordinates_lng": 0,
+    "location_country": "Netherlands",
+    "location_city":"Amsterdam",
+    "title": "Galerijflat",
+    "image": "https://cdn-v3.huislijn.nl/objects/c5f4d7698dbb1de56d32181ecdd6a285b2e27c71/a256ea4b67cb852ac47015bd1bbb648971bd94e2/m.jpg",
+    "sold": 0
+  }

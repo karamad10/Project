@@ -15,8 +15,6 @@ const validateInput = houseObj => {
     price_value,
     location_coordinates_lat,
     location_coordinates_lng,
-    description,
-    title,
     images,
     sold
   } = houseObj;
@@ -61,12 +59,6 @@ const validateInput = houseObj => {
     if (isNaN(location_coordinates_lat) || isNaN(location_coordinates_lng)) {
       errors.push('lat/lng should be a number');
     }
-    if (description.length < 10) {
-      errors.push('description should be at least 10 characters');
-    }
-    if (title.length < 50 && title.length < 5) {
-      errors.push('title should be 5-50 characters');
-    }
     if (sold < 0 || sold > 1) {
       errors.push('sold is either 1 or 0');
     }
@@ -86,7 +78,7 @@ const validateInput = houseObj => {
 };
 
 const sqlDataFields = houseObj => {
-  return requiredFields.map(field => houseObj[field]);
+  return requiredFields.map(field => (field === 'market_date' ? new Date() : houseObj[field]));
 };
 
 module.exports = { validateInput, sqlDataFields };
